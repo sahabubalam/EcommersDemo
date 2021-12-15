@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: html_head">
+
+</head>
+
+
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+    <!-- Navbar -->
+    <nav th:replace="fragments :: html_navbar">
+
+    </nav>
+    <!-- Main Sidebar Container -->
+    <aside th:replace="fragments :: html_aside">
+
+    </aside>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0 text-dark">Dashboard</h1>
+                    </div><!-- /.col -->
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a th:href="@{/createProduct}">Add Product</a></li>
+
+                        </ol>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
+        <div class="container">
+            <div class="card">
+                <div class="card-header"> Add Product</div>
+                <div class="card-body">
+                    <form th:action="@{/store/product}" method="post" th:object="${productDTO}" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Product Name</label>
+                                    <input type="text" class="form-control" name="name"   placeholder="Product name">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Price</label>
+                                    <input type="text" class="form-control" name="price" placeholder="Product Price">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Quantity</label>
+                                    <input type="text" class="form-control" name="quantity"  placeholder="Quantity">
+                                </div>
+                            </div>
+<!--                            <div class="col-md-6">-->
+<!--                                <div class="form-group">-->
+<!--                                    <label>Featured</label>-->
+<!--                                    <select class="form-control">-->
+<!--                                        <option selected disabled>Select</option>-->
+<!--                                        <option value="0">0</option>-->
+<!--                                        <option value="1">1</option>-->
+<!--                                    </select>-->
+<!--                                </div>-->
+<!--                            </div>-->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Category</label>
+                                    <select class="form-control" name="categoryId">
+                                        <option selected disabled>Select</option>
+                                        <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}">0</option>
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Image</label>
+                                    <input type="file" name="image" id="fileImage" class="form-control" accept="image/jpeg, image/png">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group" style="margin-top:27px">
+
+                                    <img  id="thumbnail"  alt="image" width="45">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Description</label>
+                                    <textarea class=" form-control content" name="description"></textarea>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <input type="hidden" name="imgName" th:value="${productDTO.image}" />
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+<div th:replace="fragments :: html_link">
+
+</div>
+<script>
+    $(document).ready(function(){
+
+    $('#fileImage').change(function(){
+       showImageThumbnail(this);
+    });
+    function showImageThumbnail(fileInput){
+        file=fileInput.files[0];
+        reader = new FileReader();
+        reader.onload=function(e){
+        $('#thumbnail').attr('src',e.target.result);
+        };
+        reader.readAsDataURL(file);
+    }
+    	$('.content').richText();
+    });
+</script>
+</body>
+</html>
