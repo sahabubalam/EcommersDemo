@@ -40,42 +40,33 @@
             <div class="card">
                 <div class="card-header"> Add Product</div>
                 <div class="card-body">
-                    <form th:action="@{/store/product}" method="post" th:object="${productDTO}" enctype="multipart/form-data">
+                    <form method="post"th:object="${product}" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Product Name</label>
-                                    <input type="text" class="form-control" name="name"   placeholder="Product name">
+                                    <input th:field="*{name}" type="text" class="form-control" name="name" >
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Price</label>
-                                    <input type="text" class="form-control" name="price" placeholder="Product Price">
+                                    <input type="text" th:field="*{price}" class="form-control" name="price">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Quantity</label>
-                                    <input type="text" class="form-control" name="quantity"  placeholder="Quantity">
+                                    <input type="text" th:field="*{quantity}" class="form-control" name="quantity">
                                 </div>
                             </div>
-<!--                            <div class="col-md-6">-->
-<!--                                <div class="form-group">-->
-<!--                                    <label>Featured</label>-->
-<!--                                    <select class="form-control">-->
-<!--                                        <option selected disabled>Select</option>-->
-<!--                                        <option value="0">0</option>-->
-<!--                                        <option value="1">1</option>-->
-<!--                                    </select>-->
-<!--                                </div>-->
-<!--                            </div>-->
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Category</label>
                                     <select class="form-control" name="categoryId">
                                         <option selected disabled>Select</option>
-                                        <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}">0</option>
+                                        <option  th:each="category : ${categories}"  th:value="${category.id}" th:text="${category.name}" th:selected="${product.category.id==category.id}"></option>
 
                                     </select>
                                 </div>
@@ -89,13 +80,13 @@
                             <div class="col-md-6">
                                 <div class="form-group" style="margin-top:27px">
 
-                                    <img  id="thumbnail"  alt="image" width="45">
+                                    <img  id="thumbnail" th:src="@{${'/productimages/' + product.image}}"  alt="image" width="45">
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>Description</label>
-                                    <textarea class=" form-control content" name="description"></textarea>
+                                    <textarea class=" form-control content" th:field="*{description}" name="description"></textarea>
 
                                 </div>
                             </div>
@@ -103,7 +94,7 @@
                         </div>
 
 
-                        <input type="hidden" name="imgName" th:value="${productDTO.image}" />
+                        <input type="hidden" name="imgName" />
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
                 </div>

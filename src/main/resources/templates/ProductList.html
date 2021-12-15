@@ -27,7 +27,7 @@
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li ><a class="btn btn-primary" th:href="@{/createCategory}">Add Category</a></li>
+                            <li ><a class="btn btn-primary" th:href="@{/createProduct}">Add Product</a></li>
 
                         </ol>
                     </div><!-- /.col -->
@@ -37,28 +37,34 @@
         <!-- /.content-header -->
         <div class="container">
             <div class="card">
-                <div class="card-header"> Category List</div>
+                <div class="card-header"> Product List</div>
                 <div class="card-body">
                     <table id="example2" class="table table-bordered table-hover">
                         <thead>
                         <tr>
                             <th>SI</th>
-                            <th>Category Name</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Category</th>
+                            <th>Image</th>
                             <th>Status</th>
                             <th>Edit</th>
                             <th>Delete</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="category,idx : ${categories}">
+                        <tr th:each="product,idx:${products}">
                             <td th:text="${idx.index+1}">1</td>
-                            <td th:text="${category.name}">name</td>
+                            <td th:text="${product.name}">name</td>
+                            <td th:text="${product.price}">price</td>
+                            <td th:text="${product.category.name}"></td>
+                            <td ><img width="40" th:src="@{${'/productimages/'+product.image}}"></td>
                             <td>
-                                <a th:href="@{'/update/status/'+${category.id}}" th:if="${category.status}==1"><i class="far fa-check-square"></i></a>
-                                <a th:href="@{'/update/status/'+${category.id}}" th:if="${category.status}==0"><i class="far fa-square"></i></a>
+                                <a th:if="${product.status}==1" ><i class="far fa-check-square"></i></a>
+                                <a th:if="${product.status}==0" ><i class="far fa-square"></i></a>
                             </td>
-                            <td><a class="btn btn-info btn-sm" th:href="@{'/edit/category/'+${category.id}}"><i class="fal fa-edit"></i></a></td>
-                            <td><a class="btn btn-danger btn-sm" th:href="@{'/delete/category/'+${category.id}}" id="deleteBtn"><i class="far fa-trash"></i></a></td>
+                            <td><a th:href="@{'/edit/product/'+${product.id}}" class="btn btn-info btn-sm" ><i class="fal fa-edit"></i></a></td>
+                            <td><a th:href="@{'/delete/product/'+${product.id}}" class="btn btn-danger btn-sm" id="deleteBtn"><i class="far fa-trash"></i></a></td>
                         </tr>
 
 
@@ -112,7 +118,7 @@
 </div>
 
 <script type="text/javascript">
-    $(document).ready(function () {
+   $(document).ready(function () {
         $('.table #deleteBtn').on('click',function(event){
         event.preventDefault();
         let href = $(this).attr('href');
@@ -120,7 +126,6 @@
         $('#myModal').modal('show');
     });
     });
-
 </script>
 </body>
 </html>
