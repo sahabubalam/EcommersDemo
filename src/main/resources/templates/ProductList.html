@@ -27,7 +27,7 @@
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li ><a class="btn btn-primary" th:href="@{/createProduct}">Add Product</a></li>
+                            <li ><a class="btn btn-primary" th:href="@{/admin/createProduct}">Add Product</a></li>
 
                         </ol>
                     </div><!-- /.col -->
@@ -63,8 +63,8 @@
                                 <a th:if="${product.status}==1" ><i class="far fa-check-square"></i></a>
                                 <a th:if="${product.status}==0" ><i class="far fa-square"></i></a>
                             </td>
-                            <td><a th:href="@{'/edit/product/'+${product.id}}" class="btn btn-info btn-sm" ><i class="fal fa-edit"></i></a></td>
-                            <td><a th:href="@{'/delete/product/'+${product.id}}" class="btn btn-danger btn-sm" id="deleteBtn"><i class="far fa-trash"></i></a></td>
+                            <td><a th:href="@{'/admin/edit/product/'+${product.id}}" class="btn btn-info btn-sm" ><i class="fal fa-edit"></i></a></td>
+                            <td><a th:href="@{'/admin/delete/product/'+${product.id}}" class="btn btn-danger btn-sm" id="deleteBtn"><i class="far fa-trash"></i></a></td>
                         </tr>
 
 

@@ -27,7 +27,7 @@
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li ><a class="btn btn-primary" th:href="@{/admin/createCategory}">Add Category</a></li>
+                            <li ><a class="btn btn-primary" th:href="@{/admin/contact}">Add Contact</a></li>
 
                         </ol>
                     </div><!-- /.col -->
@@ -37,28 +37,25 @@
         <!-- /.content-header -->
         <div class="container">
             <div class="card">
-                <div class="card-header"> Category List</div>
+                <div class="card-header"> Contact List</div>
                 <div class="card-body">
                     <table id="example2" class="table table-bordered table-hover">
                         <thead>
                         <tr>
                             <th>SI</th>
-                            <th>Category Name</th>
-                            <th>Status</th>
+                            <th>Name</th>
+                            <th>Image</th>
                             <th>Edit</th>
                             <th>Delete</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="category,idx : ${categories}">
+                        <tr th:each="contact,idx:${contacts}">
                             <td th:text="${idx.index+1}">1</td>
-                            <td th:text="${category.name}">name</td>
-                            <td>
-                                <a th:href="@{'/admin/update/status/'+${category.id}}" th:if="${category.status}==1"><i class="far fa-check-square"></i></a>
-                                <a th:href="@{'/admin/update/status/'+${category.id}}" th:if="${category.status}==0"><i class="far fa-square"></i></a>
-                            </td>
-                            <td><a class="btn btn-info btn-sm" th:href="@{'/admin/edit/category/'+${category.id}}"><i class="fal fa-edit"></i></a></td>
-                            <td><a class="btn btn-danger btn-sm" th:href="@{'/admin/delete/category/'+${category.id}}" id="deleteBtn"><i class="far fa-trash"></i></a></td>
+                            <td th:text="${contact.first_name}">name</td>
+                            <td ><img width="40" th:src="@{${'/img/'+contact.image}}"></td>
+                            <td><a th:href="@{'/admin/edit/contact/'+${contact.id}}" class="btn btn-info btn-sm" ><i class="fal fa-edit"></i></a></td>
+                            <td><a th:href="@{'/admin/delete/contact/'+${contact.id}}" class="btn btn-danger btn-sm" id="deleteBtn"><i class="far fa-trash"></i></a></td>
                         </tr>
 
 
@@ -112,7 +109,7 @@
 </div>
 
 <script type="text/javascript">
-    $(document).ready(function () {
+   $(document).ready(function () {
         $('.table #deleteBtn').on('click',function(event){
         event.preventDefault();
         let href = $(this).attr('href');
@@ -120,7 +117,6 @@
         $('#myModal').modal('show');
     });
     });
-
 </script>
 </body>
 </html>

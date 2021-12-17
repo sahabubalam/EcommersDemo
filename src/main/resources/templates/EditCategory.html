@@ -38,7 +38,7 @@
             <div class="card">
                 <div class="card-header"> Add Category</div>
                 <div class="card-body">
-                    <form th:action="@{'/updateCategory/' + ${category.id}}" th:object="${category}" method="POST" >
+                    <form th:action="@{'/admin/updateCategory/' + ${category.id}}" th:object="${category}" method="POST" >
 <!--                        <input type="hidden" name="id" th:field="*{id}"  />-->
                         <div class="form-group">
                             <label>Category Name</label>

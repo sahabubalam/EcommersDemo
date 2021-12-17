@@ -26,7 +26,7 @@
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li ><a class="btn btn-primary" th:href="@{/categoryList}">Category List</a></li>
+                            <li ><a class="btn btn-primary" th:href="@{/admin/categoryList}">Category List</a></li>
 
                         </ol>
                     </div><!-- /.col -->
@@ -38,7 +38,7 @@
             <div class="card">
                 <div class="card-header"> Add Category</div>
                 <div class="card-body">
-                    <form th:action="@{/store/category}" th:object="${category}" method="POST" >
+                    <form th:action="@{/admin/store/category}" th:object="${category}" method="POST" >
                         <div class="form-group">
                             <label>Category Name</label>
                             <input type="text" class="form-control" th:field="*{name}" name="name"   placeholder="Enter Category name">

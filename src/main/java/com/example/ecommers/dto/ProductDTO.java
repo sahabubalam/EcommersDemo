@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class ProductDTO {
 
     private int id;

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class DashboardController {
 
-    @RequestMapping("/")
+    @RequestMapping("/admin")
     public String index()
     {
         return "index";

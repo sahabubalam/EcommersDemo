@@ -19,19 +19,19 @@ public class CategoryController {
     @Autowired
     CategoryRepo er;
 
-    @GetMapping("/categoryList")
+    @GetMapping("/admin/categoryList")
     public String getCategory(Model model)
     {
         model.addAttribute("categories",categoryService.getAllCategories());
         return "CategoryList";
     }
-    @RequestMapping("/createCategory")
+    @RequestMapping("/admin/createCategory")
     public String category(Model model)
     {
         model.addAttribute("category",new Category());
         return "AddCategory.html";
     }
-    @PostMapping("/store/category")
+    @PostMapping("/admin/store/category")
     public String storeCategory(@Valid @ModelAttribute("category") Category category, BindingResult bindingResult)
     {
         if (bindingResult.hasErrors())
@@ -39,15 +39,15 @@ public class CategoryController {
             return "AddCategory.html";
         }
         categoryService.addCategory(category);
-        return "redirect:/categoryList";
+        return "redirect:/admin/categoryList";
     }
-    @GetMapping("/delete/category/{id}")
+    @GetMapping("/admin/delete/category/{id}")
     public String deleteCategory(@PathVariable int id)
     {
         categoryService.removeCategoryById(id);
-        return "redirect:/categoryList";
+        return "redirect:/admin/categoryList";
     }
-    @GetMapping("/edit/category/{id}")
+    @GetMapping("/admin/edit/category/{id}")
     public String editCategory(@PathVariable int id,Model model)
     {
         Optional<Category> category =categoryService.editCategoryById(id);
@@ -55,7 +55,7 @@ public class CategoryController {
         return "EditCategory";
 
     }
-    @PostMapping("/updateCategory/{id}")
+    @PostMapping("/admin/updateCategory/{id}")
     public String updateCategory(@Valid @ModelAttribute Category category ,BindingResult bindingResult,@PathVariable int id)
     {
       // Optional<Category> cate = categoryService.editCategoryById(id);
@@ -66,9 +66,9 @@ public class CategoryController {
        Category cat = er.getById(id);
         cat.setName(category.getName());
         er.save(cat);
-       return "redirect:/categoryList";
+       return "redirect:/admin/categoryList";
     }
-    @GetMapping("/update/status/{id}")
+    @GetMapping("/admin/update/status/{id}")
     public String updateStatus(@PathVariable int id,Category category)
     {
         Category cat = er.getById(id);
@@ -76,15 +76,15 @@ public class CategoryController {
         {
             cat.setStatus("0");
             er.save(cat);
-            return "redirect:/categoryList";
+            return "redirect:/admin/categoryList";
         }
         else if(cat.getStatus().equals("0"))
         {
             cat.setStatus("1");
             er.save(cat);
-            return "redirect:/categoryList";
+            return "redirect:/admin/categoryList";
         }
-        return "redirect:/categoryList";
+        return "redirect:/admin/categoryList";
     }
 
 

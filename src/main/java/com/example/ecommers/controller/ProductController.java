@@ -29,14 +29,14 @@ public class ProductController {
     ProductRepo pr;
     @Autowired
     CategoryService categoryService;
-    @RequestMapping("/createProduct")
+    @RequestMapping("/admin/createProduct")
     public String createProduct(Model model)
     {
         model.addAttribute("categories",categoryService.getAllCategories());
         model.addAttribute("productDTO",new ProductDTO());
         return "AddProduct";
     }
-    @PostMapping("/store/product")
+    @PostMapping("/admin/store/product")
     public String addproduct(@ModelAttribute("productDTO") ProductDTO productDTO,
                              @RequestParam("image") MultipartFile file,@RequestParam("imgName")
                                          String imgName) throws IOException
@@ -61,15 +61,15 @@ public class ProductController {
         product.setImage(imageUUID);
         productService.addProduct(product);
 
-        return "redirect:/categoryList";
+        return "redirect:/admin/productList";
     }
-    @GetMapping("/productList")
+    @GetMapping("/admin/productList")
     public String getCategory(Model model)
     {
         model.addAttribute("products",productService.getAllProduct());
         return "ProductList";
     }
-    @GetMapping("/delete/product/{id}")
+    @GetMapping("/admin/delete/product/{id}")
     public String deleteProduct(@PathVariable int id)
     {
         //find specific id
@@ -85,16 +85,16 @@ public class ProductController {
             try {
                 Files.delete(path);
                 productService.deleteProductById(id);
-                return "redirect:/productList";
+                return "redirect:/admin/productList";
 
             } catch (Exception exception) {
                 System.out.println("error while uploading image catch:: " + exception.getMessage());
             }
         }
         productService.deleteProductById(id);
-        return "redirect:/productList";
+        return "redirect:/admin/productList";
     }
-    @GetMapping("/edit/product/{id}")
+    @GetMapping("/admin/edit/product/{id}")
     public String editProduct(@PathVariable int id,Model model)
     {
 
@@ -103,5 +103,32 @@ public class ProductController {
         model.addAttribute("productDTO",new ProductDTO());
         model.addAttribute("categories",categoryService.getAllCategories());
         return "EditProduct";
+    }
+    @PostMapping("/admin/update/product/{id}")
+    public String updateProduct(@PathVariable int id,ProductDTO productDTO,@RequestParam("image") MultipartFile file,@RequestParam("imgName")
+            String imgName) throws IOException
+    {
+        Product pro = productService.getProductById(id).get();
+       // ProductDTO productDTO = new ProductDTO();
+
+        pro.setName(productDTO.getName());
+        pro.setPrice(productDTO.getPrice());
+        pro.setQuantity(productDTO.getQuantity());
+        pro.setDescription(productDTO.getDescription());
+        pro.setCategory(categoryService.editCategoryById(productDTO.getCategoryId()).get());
+
+        String imageUUID;
+        if(!file.isEmpty())
+        {
+            imageUUID=file.getOriginalFilename();
+            Path fileNameAndPath= Paths.get(uploaddir,imageUUID);
+            Files.write(fileNameAndPath,file.getBytes());
+        } else{
+            imageUUID=imgName;
+        }
+        pro.setImage(imageUUID);
+       // productService.addProduct(product);
+
+        return "redirect:/admin/productList";
     }
 }
