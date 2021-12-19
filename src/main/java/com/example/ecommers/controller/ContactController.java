@@ -75,6 +75,27 @@ public class ContactController {
         model.addAttribute("contacts",contactService.getAllContact());
         return "ContactList";
     }
+    @GetMapping("/admin/delete/contact/{id}")
+    public String deleteContact(@PathVariable int id)
+    {
+        Contact contact=contactRepo.findById(id).get();
+        String image=contact.getImage();
+        String imagePath=uploaddir+"\\"+image;
+        Path path = Paths.get(imagePath);
+        if(image!=null)
+        {
+            try {
+                Files.delete(path);
+                contactService.deleteContactById(id);
+                return "redirect:/admin/contactList";
+
+            } catch (Exception exception) {
+                System.out.println("error while uploading image catch:: " + exception.getMessage());
+            }
+        }
+        contactService.deleteContactById(id);
+        return "redirect:/admin/contactList";
+    }
     @GetMapping("/admin/edit/contact/{id}")
     public String editContact(@PathVariable int id,Model model)
     {
@@ -118,14 +139,21 @@ public class ContactController {
             }
 
 
-        } else{
+        }
+        else
+        {
             if(oldDetails.getImage()==null)
             {
+                contactService.addContact(contact);
                 System.out.println("data "+contact);
             }
-            contact.setImage(oldDetails.getImage());
+            else
+            {
+                contact.setImage(oldDetails.getImage());
+                contactService.addContact(contact);
+                System.out.println("data "+contact);
+            }
 
-            System.out.println("data "+contact);
         }
         System.out.println("data"+contact);
         return "redirect:/admin/contactList";

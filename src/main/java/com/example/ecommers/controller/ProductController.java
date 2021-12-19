@@ -38,7 +38,7 @@ public class ProductController {
     }
     @PostMapping("/admin/store/product")
     public String addproduct(@ModelAttribute("productDTO") ProductDTO productDTO,
-                             @RequestParam("image") MultipartFile file,@RequestParam("imgName")
+                             @RequestParam("proImage") MultipartFile file,@RequestParam("imgName")
                                          String imgName) throws IOException
     {
         Product product=new Product();
@@ -105,28 +105,66 @@ public class ProductController {
         return "EditProduct";
     }
     @PostMapping("/admin/update/product/{id}")
-    public String updateProduct(@PathVariable int id,ProductDTO productDTO,@RequestParam("image") MultipartFile file,@RequestParam("imgName")
-            String imgName) throws IOException
+    public String updateProduct(@PathVariable int id,ProductDTO productDTO,Product product,@RequestParam("proImage") MultipartFile file) throws IOException
     {
+        System.out.println("data "+product);
         Product pro = productService.getProductById(id).get();
        // ProductDTO productDTO = new ProductDTO();
+        System.out.println("data "+pro);
 
-        pro.setName(productDTO.getName());
-        pro.setPrice(productDTO.getPrice());
-        pro.setQuantity(productDTO.getQuantity());
-        pro.setDescription(productDTO.getDescription());
-        pro.setCategory(categoryService.editCategoryById(productDTO.getCategoryId()).get());
 
-        String imageUUID;
+        product.setName(productDTO.getName());
+        product.setPrice(productDTO.getPrice());
+        product.setQuantity(productDTO.getQuantity());
+        product.setDescription(productDTO.getDescription());
+        product.setCategory(categoryService.editCategoryById(productDTO.getCategoryId()).get());
+
+
         if(!file.isEmpty())
         {
-            imageUUID=file.getOriginalFilename();
-            Path fileNameAndPath= Paths.get(uploaddir,imageUUID);
-            Files.write(fileNameAndPath,file.getBytes());
-        } else{
-            imageUUID=imgName;
+            if(pro.getImage()==null)
+            {
+                String imageUUID;
+                imageUUID=file.getOriginalFilename();
+                Path fileNameAndPath= Paths.get(uploaddir,imageUUID);
+                Files.write(fileNameAndPath,file.getBytes());
+                product.setImage(imageUUID);
+                productService.addProduct(product);
+                System.out.println("data "+product);
+            }
+            else
+            {
+                //delete image
+                String image = pro.getImage();
+                String imagePath=uploaddir+"\\"+image;
+                Path path = Paths.get(imagePath);
+                Files.delete(path);
+                //update image
+                String imageUUID;
+                imageUUID=file.getOriginalFilename();
+                Path fileNameAndPath= Paths.get(uploaddir,imageUUID);
+                Files.write(fileNameAndPath,file.getBytes());
+                product.setImage(imageUUID);
+                productService.addProduct(product);
+                System.out.println("data "+product);
+            }
+
         }
-        pro.setImage(imageUUID);
+        else
+        {
+            if(pro.getImage()==null)
+            {
+                productService.addProduct(product);
+                System.out.println("data "+product);
+            }
+            else
+            {
+                product.setImage(pro.getImage());
+                productService.addProduct(product);
+                System.out.println("data "+product);
+            }
+        }
+        //pro.setImage(imageUUID);
        // productService.addProduct(product);
 
         return "redirect:/admin/productList";

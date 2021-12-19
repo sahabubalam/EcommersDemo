@@ -20,5 +20,5 @@ public class ProductDTO {
     private String description;
     private String status="1";
     private int featured=1;
-    private MultipartFile image;
+    private String image;
 }
