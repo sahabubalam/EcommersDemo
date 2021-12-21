@@ -1,8 +1,9 @@
 package com.example.ecommers.model;
 
 import javax.persistence.*;
-
+import javax.persistence.Entity;
 @Entity
+
 public class User {
 
     @Id

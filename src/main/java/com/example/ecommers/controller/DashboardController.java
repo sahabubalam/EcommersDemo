@@ -4,6 +4,7 @@ import com.example.ecommers.message.Message;
 import com.example.ecommers.model.User;
 import com.example.ecommers.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,8 @@ import javax.servlet.http.HttpSession;
 public class DashboardController {
     @Autowired
     UserRepo userRepo;
+    @Autowired
+    BCryptPasswordEncoder passwordEncoder;
 
     @RequestMapping("/admin")
     public String index()
@@ -31,7 +34,8 @@ public class DashboardController {
     {
         try {
             user.setEnabled(true);
-            user.setRole("USER");
+            user.setRole("ROLE_USER");
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepo.save(user);
             System.out.println("User "+user);
             model.addAttribute("user",new User());

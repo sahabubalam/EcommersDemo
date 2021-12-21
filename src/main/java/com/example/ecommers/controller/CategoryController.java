@@ -20,10 +20,12 @@ public class CategoryController {
     CategoryRepo er;
 
     @GetMapping("/admin/categoryList")
+
     public String getCategory(Model model)
     {
         model.addAttribute("categories",categoryService.getAllCategories());
         return "CategoryList";
+       // return "working";
     }
     @RequestMapping("/admin/createCategory")
     public String category(Model model)

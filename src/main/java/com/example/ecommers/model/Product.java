@@ -23,4 +23,13 @@ public class Product {
     private Category category;
     @Nullable
     private String image;
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
 }
