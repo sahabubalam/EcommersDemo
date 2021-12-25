@@ -20,7 +20,6 @@ import java.nio.file.StandardCopyOption;
 
 @Controller
 public class ContactController {
-    public static String uploaddir=System.getProperty("user.dir") +"/src/main/resources/static/img";
     @Autowired
     ContactService contactService;
     @Autowired
@@ -32,8 +31,6 @@ public class ContactController {
         return "AddContact";
     }
     @PostMapping("/admin/store/contact")
-    //@RequestMapping(value = { "/admin/store/contact" }, method = RequestMethod.POST, consumes = {"multipart/form-data"})
-
     public String storeContact(@ModelAttribute Contact contact,@RequestParam("fileimage") MultipartFile file)
     {
 
@@ -42,20 +39,16 @@ public class ContactController {
 
             if(file.isEmpty())
             {
-                System.out.println("nai");
+                System.out.println("File not selected");
             }
             else
             {
-                String imageUUID;
-                imageUUID=file.getOriginalFilename();
-                Path fileNameAndPath= Paths.get(uploaddir,imageUUID);
-                Files.write(fileNameAndPath,file.getBytes());
-                contact.setImage(imageUUID);
-//                contact.setImage(file.getOriginalFilename());
-//                File saveFile= new ClassPathResource("/src/main/resources/static/img").getFile();
-//                Path path=   Paths.get(saveFile.getAbsolutePath()+File.separator+file.getOriginalFilename());
-//                Files.copy(file.getInputStream(),path, StandardCopyOption.REPLACE_EXISTING);
-                System.out.println("image uploded");
+                contact.setImage(file.getOriginalFilename());
+                File saveFile= new ClassPathResource("static/img").getFile();
+                Path path=   Paths.get(saveFile.getAbsolutePath()+File.separator+file.getOriginalFilename());
+                Files.copy(file.getInputStream(),path, StandardCopyOption.REPLACE_EXISTING);
+
+                System.out.println("image uploaded successfully");
             }
 
             contactService.addContact(contact);
@@ -79,13 +72,12 @@ public class ContactController {
     public String deleteContact(@PathVariable int id)
     {
         Contact contact=contactRepo.findById(id).get();
-        String image=contact.getImage();
-        String imagePath=uploaddir+"\\"+image;
-        Path path = Paths.get(imagePath);
-        if(image!=null)
+        if(contact.getImage()!=null)
         {
             try {
-                Files.delete(path);
+                File contactImage= new ClassPathResource("static/img").getFile();
+                File imageFile=new File(contactImage,contact.getImage());
+                imageFile.delete();
                 contactService.deleteContactById(id);
                 return "redirect:/admin/contactList";
 
@@ -105,57 +97,36 @@ public class ContactController {
     }
     @PostMapping("/admin/update/contact")
     public String updateContact(@ModelAttribute Contact contact,@RequestParam("userImage") MultipartFile file,Model model) throws IOException {
-        //old contact details
-       Contact oldDetails= contactRepo.findById(contact.getId()).get();
-        if(!file.isEmpty())
-        {
-            if(oldDetails.getImage()==null)
-            {
-                //update new
-                String imageUUID;
-                imageUUID=file.getOriginalFilename();
-                Path fileNameAndPath= Paths.get(uploaddir,imageUUID);
-                Files.write(fileNameAndPath,file.getBytes());
-                contact.setImage(imageUUID);
-                contactService.addContact(contact);
-                System.out.println("data "+contact);
-            }
-            else
-            {
-                //delete oldphoto
-                String image=oldDetails.getImage();
-                //find image with path
-                String imagePath=uploaddir+"\\"+image;
-                Path path = Paths.get(imagePath);
-                Files.delete(path);
-                //update new
-                String imageUUID;
-                imageUUID=file.getOriginalFilename();
-                Path fileNameAndPath= Paths.get(uploaddir,imageUUID);
-                Files.write(fileNameAndPath,file.getBytes());
-                contact.setImage(imageUUID);
-                contactService.addContact(contact);
-                System.out.println("data "+contact);
-            }
 
 
-        }
-        else
-        {
-            if(oldDetails.getImage()==null)
-            {
-                contactService.addContact(contact);
-                System.out.println("data "+contact);
-            }
-            else
-            {
-                contact.setImage(oldDetails.getImage());
-                contactService.addContact(contact);
-                System.out.println("data "+contact);
-            }
+       try{
+           //old contact details
+           Contact oldDetails= contactRepo.findById(contact.getId()).get();
 
-        }
-        System.out.println("data"+contact);
+           //image
+           if(!file.isEmpty())
+           {
+               //delete old image
+               File deleteOldImage= new ClassPathResource("static/img").getFile();
+               File oldFile=new File(deleteOldImage,oldDetails.getImage());
+               oldFile.delete();
+
+               //update new image
+               File saveFile= new ClassPathResource("static/img").getFile();
+               Path path=   Paths.get(saveFile.getAbsolutePath()+File.separator+file.getOriginalFilename());
+               Files.copy(file.getInputStream(),path, StandardCopyOption.REPLACE_EXISTING);
+               contact.setImage(file.getOriginalFilename());
+           }
+           else
+           {
+               contact.setImage(oldDetails.getImage());
+           }
+           contactService.addContact(contact);
+
+       }catch(Exception e){
+
+       }
+//        System.out.println("data"+contact);
         return "redirect:/admin/contactList";
     }
 }

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href=" https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css	">
+    <link rel="stylesheet" th:href="@{/front/css/productdetails.css}">
+
+
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" th:href="@{/front/css/bootstrap.css}">
+
+    <!-- Eshop StyleSheet -->
+    <link rel="stylesheet" th:href="@{/front/css/style.css}">
+
+
+</head>
+<body>
+<header class="header shop">
+    <!-- Topbar -->
+    <div class="topbar">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-5 col-md-12 col-12">
+                    <!-- Top Left -->
+                    <div class="top-left">
+                        <ul class="list-main">
+                            <li><i class="ti-headphone-alt"></i> +060 (800) 801-582</li>
+                            <li><i class="ti-email"></i> support@shophub.com</li>
+                        </ul>
+                    </div>
+                    <!--/ End Top Left -->
+                </div>
+                <div class="col-lg-7 col-md-12 col-12">
+                    <!-- Top Right -->
+                    <div class="right-content">
+                        <ul class="list-main">
+                            <li><i class="ti-location-pin"></i> Store location</li>
+                            <li><i class="ti-alarm-clock"></i> <a href="#">Daily deal</a></li>
+                            <li><i class="ti-user"></i> <a href="#">My account</a></li>
+                            <li><i class="ti-power-off"></i><a href="login.html#">Login</a></li>
+                        </ul>
+                    </div>
+                    <!-- End Top Right -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+</header>
+<div class="container">
+    <div class="col-lg-8 border p-3 main-section bg-white">
+        <div class="row hedding m-0 pl-3 pt-0 pb-3">
+            Product Detail Design Using Bootstrap 4.0
+        </div>
+        <div class="row m-0" th:object="${product}">
+            <div class="col-lg-4 left-side-product-box pb-3">
+<!--                <img src="http://nicesnippets.com/demo/pd-image1.jpg" class="border p-3">-->
+                <img class="border p-3" th:src="@{${'/productimages/'+product.image}}" alt="#">
+            </div>
+            <div class="col-lg-8">
+                <div class="right-side-pro-detail border p-3 m-0">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div>
+                            <a style="text-decoration: none" th:href="${product.id}" id="deleteBtn">Add Review</a>
+
+                            <a>Rating :</a>
+                            <a th:text="${lists}"></a>
+                            </div>
+                            <div class="rating" >
+
+
+                                <input  th:checked="${lists==5}" type="radio" name="prating" th:value="5" >
+                                <label for="5">☆</label>
+                                <input  th:checked="${lists==4}" type="radio" name="prating" th:value="4" >
+                                <label for="4">☆</label>
+                                <input  th:checked="${lists==3.75}" type="radio" name="prating" th:value="3" >
+                                <label for="3">☆</label>
+                                <input  th:checked="${lists==2.75}" type="radio" name="prating" th:value="2" >
+                                <label for="2">☆</label>
+                                <input  th:checked="${lists==1.75}" type="radio" name="prating" th:value="1" >
+                                <label for="1">☆</label>
+                            </div>
+
+                        </div>
+                        <div class="col-lg-12">
+                            <p class="m-0 p-0 price-pro" th:text="${product.price}">$30</p>
+                            <hr class="p-0 m-0">
+                        </div>
+                        <div class="col-lg-12 pt-2">
+                            <h5>Product Detail</h5>
+                            <span th:utext="${product.description}"></span>
+                            <hr class="m-0 pt-2 mt-2">
+                        </div>
+
+                        <div class="col-lg-12">
+                            <h6>Quantity :</h6>
+                            <input type="number" name="quantity" class="form-control text-center w-100" value="1">
+                        </div>
+                        <div class="col-lg-12 mt-3">
+                            <div class="row">
+                                <div class="col-lg-6 pb-2">
+                                    <a th:href="@{'/save/item/'+${product.id}}" class="btn btn-danger">Add To Cart</a>
+                                </div>
+                                <div class="col-lg-6">
+                                    <a th:href="@{'/'}" class="btn btn-success">Shop Now</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+.rating {
+    display: flex;
+    flex-direction: row-reverse;
+    float: left;
+
+}
+
+.rating>input {
+    display: none
+}
+
+.rating>label {
+    position: relative;
+    width: 1em;
+    font-size: 1.8vw;
+    color: #FFD600;
+    cursor: pointer
+}
+
+.rating>label::before {
+    content: "\2605";
+    position: absolute;
+    opacity: 0
+}
+
+.rating>label:hover:before,
+.rating>label:hover~label:before {
+    opacity: 1 !important
+}
+
+.rating>input:checked~label:before {
+    opacity: 1
+}
+
+.rating:hover>input:checked~label:before {
+    opacity: 0.4
+}
+</style>
+
+<!-- Modal -->
+
+<div class="modal mt-2" id="myModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        <form th:action="@{'/save/rating'}" th:object="${rating}" method="POST">
+                <div class="modal-body ">
+                    <input type="text" name="content" class="form-control" placeholder="Write Content here...">
+                </div>
+            <input type="hidden" name="id" th:value="${product.id}">
+            <div class="modal-body">
+                <div class="rating">
+                    <input type="radio" name="prating" th:value="${5}" id="5">
+                    <label for="5">☆</label>
+                    <input type="radio" name="prating" th:value="${4}" id="4">
+                    <label for="4">☆</label>
+                    <input type="radio" name="prating" th:value="${3}" id="3">
+                    <label for="3">☆</label>
+                    <input type="radio" name="prating" th:value="${2}" id="2">
+                    <label for="2">☆</label>
+                    <input type="radio" name="prating" th:value="${1}" id="1">
+                    <label for="1">☆</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary btn-sm" id="delRef">Submit</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+      </form>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.container #deleteBtn').on('click',function(event){
+        event.preventDefault();
+        let href = $(this).attr('href');
+        console.log(href);
+        $('#myModal #delRef').attr('href', href);
+        $('#myModal').modal('show');
+    });
+    });
+
+</script>
+</body>
+</html>

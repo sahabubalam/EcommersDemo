@@ -24,6 +24,7 @@ public class Product {
     @Nullable
     private String image;
 
+
     public Category getCategory() {
         return category;
     }

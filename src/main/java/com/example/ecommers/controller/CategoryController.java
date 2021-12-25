@@ -1,15 +1,22 @@
 package com.example.ecommers.controller;
 
+
+
 import com.example.ecommers.model.Category;
 import com.example.ecommers.repository.CategoryRepo;
 import com.example.ecommers.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+
+import java.security.Principal;
 import java.util.Optional;
 
 @Controller
@@ -20,10 +27,11 @@ public class CategoryController {
     CategoryRepo er;
 
     @GetMapping("/admin/categoryList")
-
-    public String getCategory(Model model)
+    public String getCategory(Model model, Principal principal)
     {
+
         model.addAttribute("categories",categoryService.getAllCategories());
+
         return "CategoryList";
        // return "working";
     }
@@ -36,12 +44,14 @@ public class CategoryController {
     @PostMapping("/admin/store/category")
     public String storeCategory(@Valid @ModelAttribute("category") Category category, BindingResult bindingResult)
     {
+
         if (bindingResult.hasErrors())
         {
             return "AddCategory.html";
         }
         categoryService.addCategory(category);
         return "redirect:/admin/categoryList";
+
     }
     @GetMapping("/admin/delete/category/{id}")
     public String deleteCategory(@PathVariable int id)
